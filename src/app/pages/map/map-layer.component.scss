@@ -1,0 +1,11 @@
+:host, .map-layer-root {
+  position: absolute;
+  inset: 0;
+}
+
+.map-layer-root {
+  width: 100%;
+  height: 100%;
+  filter: brightness(85%);
+  -webkit-filter: brightness(85%);
+}

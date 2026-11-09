@@ -1,0 +1,209 @@
+:host {
+  display: contents;
+}
+
+.dialog-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  pointer-events: auto;
+  background: var(--pm-scrim);
+  backdrop-filter: blur(3px);
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: min(580px, 100%);
+  height: min(420px, 100%);
+  overflow: hidden;
+  outline: none;
+
+  background: var(--pm-surface-strong);
+  color: var(--pm-text);
+  border: 1px solid var(--pm-border);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px var(--pm-shadow);
+  backdrop-filter: blur(14px);
+}
+
+// ── Header: the brand sits above the nav, the open tab's title above its panel ──
+.dialog-header {
+  display: flex;
+  flex: none;
+  border-bottom: 1px solid var(--pm-border);
+}
+
+.dialog-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 190px;
+  flex: none;
+  padding: 0 16px;
+  border-right: 1px solid var(--pm-border);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dialog-heading {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 12px 12px 20px;
+
+  h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+  }
+}
+
+.dialog-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--pm-text-soft);
+  cursor: pointer;
+
+  &:hover { background: var(--pm-hover); color: var(--pm-text); }
+}
+
+// ── Body ────────────────────────────────────────────────────────
+.dialog-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.dialog-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-sizing: border-box;
+  width: 190px;
+  flex: none;
+  padding: 12px 8px 0;
+  border-right: 1px solid var(--pm-border);
+}
+
+.nav-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--pm-text-soft);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover { background: var(--pm-hover); }
+  &.active { background: var(--pm-selected); color: var(--pm-text); font-weight: 500; }
+  &:focus-visible { outline: 2px solid var(--pm-accent); outline-offset: -2px; }
+}
+
+.dialog-footer {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--pm-border);
+}
+
+.footer-made {
+  font-size: 11px;
+  font-weight: 400;
+  opacity: 0.65;
+}
+
+.footer-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--pm-link);
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+}
+
+.dialog-panel {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 16px 20px 20px;
+}
+
+.panel-title {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+
+  &:not(:first-child) { margin-top: 18px; }
+}
+
+.choice-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 4px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:hover { background: var(--pm-hover); }
+
+  input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--pm-accent);
+    cursor: pointer;
+  }
+}
+
+.panel-note {
+  padding: 8px 4px;
+  font-size: 12px;
+  opacity: 0.7;
+
+  &--error { color: var(--pm-error); opacity: 1; }
+}
+
+// ── Narrow screens: the nav becomes a row of tabs above the panel ──
+@media (max-width: 560px) {
+  .dialog { height: min(520px, 100%); }
+  .dialog-brand { display: none; }
+  .dialog-heading { padding: 8px 8px 8px 16px; }
+  .dialog-body { flex-direction: column; }
+
+  .dialog-nav {
+    width: auto;
+    flex-direction: row;
+    padding: 8px;
+    border-right: none;
+    border-bottom: 1px solid var(--pm-border);
+    overflow-x: auto;
+  }
+
+  .footer-name { white-space: nowrap; }
+}

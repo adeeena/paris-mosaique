@@ -1,0 +1,32 @@
+@if (settings.legend()) {
+  <aside class="legend" [attr.aria-label]="t('legend.title')">
+    <div class="legend-title">{{ t('legend.title') }}</div>
+
+    @for (item of items(); track item.id) {
+      <div class="legend-row">
+        <span class="legend-badges">
+          @for (b of item.badges; track b.ref) {
+            <span [class]="'parmap-line-badge parmap-line-badge--' + b.shape"
+                  [style.background]="b.bg" [style.color]="b.fg">{{ b.ref }}</span>
+          }
+        </span>
+        <span class="legend-label">{{ t(item.label) }}</span>
+      </div>
+    }
+
+    <div class="legend-row legend-row--marker">
+      <span class="legend-badges"><span class="legend-station parmap-transport-x-icon"><span>&#10006;</span></span></span>
+      <span class="legend-label">{{ t('card.station') }}</span>
+    </div>
+    @if (store.defunctShown()) {
+      <div class="legend-row legend-row--marker">
+        <span class="legend-badges"><span class="legend-ghost">&#128123;</span></span>
+        <span class="legend-label">{{ t('legend.defunct') }}</span>
+      </div>
+    }
+    <div class="legend-row legend-row--marker">
+      <span class="legend-badges"><span class="legend-cell"></span></span>
+      <span class="legend-label">{{ t('legend.cell') }}</span>
+    </div>
+  </aside>
+}

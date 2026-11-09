@@ -1,0 +1,7 @@
+<div class="map-container">
+  <!-- layers are absolutely positioned to allow stacking multiple layers -->
+  <!-- ngSkipHydration: Leaflet mutates the DOM, so skip SSR hydration for these -->
+  <app-map-layer ngSkipHydration></app-map-layer>
+  <app-map-transport-layer ngSkipHydration></app-map-transport-layer>
+  <app-map-overlay ngSkipHydration></app-map-overlay>
+</div>

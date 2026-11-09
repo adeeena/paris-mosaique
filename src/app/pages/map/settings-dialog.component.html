@@ -1,0 +1,125 @@
+@if (settings.dialogOpen()) {
+  <div class="dialog-scrim" (mousedown)="onScrim($event)">
+    <div class="dialog" #dialog role="dialog" aria-modal="true" aria-labelledby="settings-title" tabindex="-1">
+      <header class="dialog-header">
+        <div class="dialog-brand">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span id="settings-title">{{ t('settings.title') }}</span>
+        </div>
+        <div class="dialog-heading">
+          <h2>{{ t(tabTitleKey()) }}</h2>
+          <button type="button" class="dialog-close" (click)="settings.closeDialog()" [attr.aria-label]="t('settings.close')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="dialog-body">
+        <nav class="dialog-nav" role="tablist" aria-orientation="vertical" [attr.aria-label]="t('settings.title')">
+          @for (tab of tabs; track tab.id) {
+            <button type="button" class="nav-row" role="tab"
+                    [class.active]="settings.tab() === tab.id"
+                    [attr.aria-selected]="settings.tab() === tab.id"
+                    (click)="settings.tab.set(tab.id)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                @switch (tab.id) {
+                  @case ('appearance') { <circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/> }
+                  @case ('layers') { <polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/> }
+                  @case ('language') { <circle cx="12" cy="12" r="9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/> }
+                }
+              </svg>
+              <span>{{ t(tab.title) }}</span>
+            </button>
+          }
+        </nav>
+
+        <section class="dialog-panel" role="tabpanel">
+          @switch (settings.tab()) {
+            @case ('appearance') {
+              <h3 class="panel-title">{{ t('theme.title') }}</h3>
+              @for (option of themeOptions; track option.id) {
+                <label class="choice-row">
+                  <input type="radio" name="theme" [value]="option.id"
+                         [checked]="settings.theme() === option.id"
+                         (change)="settings.setTheme(option.id)" />
+                  <span>{{ t(option.label) }}</span>
+                </label>
+              }
+
+              <h3 class="panel-title">{{ t('display.title') }}</h3>
+              <label class="choice-row">
+                <input type="checkbox" [checked]="settings.legend()" (change)="settings.setLegend(isChecked($event))" />
+                <span>{{ t('display.legend') }}</span>
+              </label>
+            }
+            @case ('layers') {
+              <h3 class="panel-title">{{ t('tab.layers') }}</h3>
+              <label class="choice-row">
+                <input type="checkbox" [checked]="showVoronoi" (change)="onVoronoiChange($event)" />
+                <span>{{ t('layers.voronoi') }}</span>
+              </label>
+              <label class="choice-row">
+                <input type="checkbox" [checked]="showLines" (change)="onLinesChange($event)" />
+                <span>{{ t('layers.lines') }}</span>
+              </label>
+              <label class="choice-row">
+                <input type="checkbox" [checked]="showStations" (change)="onStationsChange($event)" />
+                <span>{{ t('layers.stations') }}</span>
+              </label>
+
+              <h3 class="panel-title">{{ t('layers.modes') }}</h3>
+              @for (m of modeOptions; track m.id) {
+                <label class="choice-row" [title]="modeHint(m.id)">
+                  <input type="checkbox" [checked]="store.modes().has(m.id)" (change)="onModeChange(m.id, $event)" />
+                  <span>{{ t(modeLabelKey(m.id)) }}</span>
+                </label>
+              }
+              <label class="choice-row" [title]="t('layers.defunct.hint')">
+                <input type="checkbox" [checked]="store.defunctShown()" (change)="onDefunctChange($event)" />
+                <span>{{ t('layers.defunct') }}</span>
+              </label>
+
+              @if (store.extraStatus() === 'loading') {
+                <div class="panel-note" role="status">{{ t('extra.loading') }}</div>
+              } @else if (store.extraStatus() === 'error') {
+                <div class="panel-note panel-note--error" role="alert">{{ t('extra.error') }}</div>
+              }
+            }
+            @case ('language') {
+              <h3 class="panel-title">{{ t('tab.language') }}</h3>
+              @for (option of languages; track option.id) {
+                <label class="choice-row">
+                  <input type="radio" name="language" [value]="option.id"
+                         [checked]="settings.language() === option.id"
+                         (change)="settings.setLanguage(option.id)" />
+                  <span lang="{{ option.id }}">{{ option.label }}</span>
+                </label>
+              }
+            }
+          }
+        </section>
+      </div>
+
+      <div class="dialog-footer">
+        <span class="footer-made">{{ t('footer.madeBy') }}</span>
+        <a class="footer-name" href="https://adena.dev" target="_blank" rel="noopener">
+          Muráncsik Adéna Auróra
+          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+}

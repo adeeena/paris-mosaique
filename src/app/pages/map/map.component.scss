@@ -1,0 +1,19 @@
+.map-root {
+  background-color: #cfeefd; /* light blue */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-root p {
+  font-size: 1.25rem;
+  color: #003a63;
+  margin: 0;
+}
+
+.map-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
